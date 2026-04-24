@@ -7,6 +7,36 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#050505" />
+  <meta name="application-name" content="Score Tracker" />
+  <meta name="apple-mobile-web-app-title" content="Score Tracker" />
+  <script>
+    // Chrome on Android needs a Web App Manifest with display set to fullscreen/standalone.
+    // This keeps the project as one HTML file by generating the manifest at runtime.
+    (() => {
+      const iconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect width="512" height="512" rx="96" fill="#050505"/><text x="256" y="306" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="168" font-weight="900" fill="#fff">50</text></svg>`;
+      const iconUrl = "data:image/svg+xml," + encodeURIComponent(iconSvg);
+      const manifest = {
+        name: "Score Tracker",
+        short_name: "Scores",
+        description: "Two-player score tracker",
+        start_url: location.href.split("#")[0],
+        scope: new URL("./", location.href).href,
+        display: "fullscreen",
+        display_override: ["fullscreen", "standalone"],
+        orientation: "portrait",
+        background_color: "#050505",
+        theme_color: "#050505",
+        icons: [
+          { src: iconUrl, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+        ]
+      };
+      const blob = new Blob([JSON.stringify(manifest)], { type: "application/manifest+json" });
+      const link = document.createElement("link");
+      link.rel = "manifest";
+      link.href = URL.createObjectURL(blob);
+      document.head.appendChild(link);
+    })();
+  </script>
   <title>Score Tracker</title>
   <style>
     :root {
@@ -230,26 +260,6 @@
     .confirm-button {
       background: #050505;
       color: #fff;
-    }
-
-    @media (display-mode: browser) {
-      body::before {
-        content: "For true fullscreen: open the browser menu and choose Add to Home screen, then launch from the icon.";
-        position: fixed;
-        left: 0.5rem;
-        right: 0.5rem;
-        top: max(0.5rem, env(safe-area-inset-top));
-        z-index: 60;
-        padding: 0.45rem 0.6rem;
-        border-radius: 0.7rem;
-        background: rgba(255, 255, 255, 0.88);
-        color: #050505;
-        font-family: system-ui, sans-serif;
-        font-size: 0.78rem;
-        font-weight: 800;
-        text-align: center;
-        opacity: 0.9;
-      }
     }
 
     @media (orientation: landscape) {
