@@ -11,15 +11,14 @@
   <style>
     :root {
       --bg: #050505;
-      --panel: #111;
-      --panel-alt: #0c0c0c;
-      --line: rgba(255, 255, 255, 0.14);
+      --panel: #101010;
+      --panel-alt: #0b0b0b;
+      --line: rgba(255, 255, 255, 0.2);
       --text: #fff;
-      --muted: rgba(255, 255, 255, 0.64);
-      --overlay: rgba(255, 255, 255, 0.06);
-      --overlay-active: rgba(255, 255, 255, 0.12);
-      --danger: #ff4d4d;
-      --ok: #ffffff;
+      --minus: rgba(255, 80, 80, 0.34);
+      --plus: rgba(80, 255, 140, 0.34);
+      --minus-active: rgba(255, 80, 80, 0.55);
+      --plus-active: rgba(80, 255, 140, 0.55);
     }
 
     * {
@@ -59,11 +58,13 @@
     .app {
       position: fixed;
       inset: 0;
-      height: 100svh;
-      min-height: 100vh;
-      background: radial-gradient(circle at center, #171717 0%, #050505 58%);
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      background: radial-gradient(circle at center, #151515 0%, #050505 62%);
       display: grid;
-      grid-template-rows: 1fr 1fr;
+      grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+      overflow: hidden;
     }
 
     .half {
@@ -72,17 +73,16 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       background: var(--panel);
-      border: 0;
+      min-height: 0;
     }
 
     .half.top {
       transform: rotate(180deg);
       background: var(--panel-alt);
-      border-top: 2px solid var(--line);
     }
 
     .half.bottom {
-      border-top: 2px solid var(--line);
+      border-top: 3px solid var(--line);
     }
 
     .score {
@@ -94,11 +94,12 @@
       justify-content: center;
       pointer-events: none;
       color: var(--text);
-      font-size: clamp(8rem, 43vw, 24rem);
+      font-size: clamp(7.5rem, 39vw, 23rem);
       font-weight: 1000;
-      line-height: 0.8;
-      letter-spacing: -0.08em;
-      text-shadow: 0 0 1.5rem rgba(255, 255, 255, 0.18);
+      line-height: 0.82;
+      letter-spacing: -0.035em;
+      text-shadow: 0 0 1.6rem rgba(255, 255, 255, 0.2);
+      font-variant-numeric: tabular-nums;
     }
 
     .touch-zone {
@@ -116,19 +117,19 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: clamp(5rem, 24vw, 15rem);
+      font-size: clamp(6rem, 28vw, 17rem);
       font-weight: 1000;
       line-height: 1;
-      color: var(--overlay);
-      text-shadow: 0 0 1rem rgba(255, 255, 255, 0.08);
+      text-shadow: 0 0 1rem currentColor;
     }
+
+    .touch-zone[data-action="decrement"]::before { color: var(--minus); }
+    .touch-zone[data-action="increment"]::before { color: var(--plus); }
+    .touch-zone[data-action="decrement"]:active::before { color: var(--minus-active); }
+    .touch-zone[data-action="increment"]:active::before { color: var(--plus-active); }
 
     .touch-zone:first-child {
-      border-right: 1px solid rgba(255, 255, 255, 0.06);
-    }
-
-    .touch-zone:active::before {
-      color: var(--overlay-active);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     .center-bar {
@@ -142,17 +143,18 @@
       align-items: center;
       justify-content: center;
       pointer-events: none;
+      transform: translateY(-1.5px);
     }
 
     .reset-button {
       pointer-events: auto;
-      width: clamp(3.1rem, 14vw, 4.8rem);
-      height: clamp(3.1rem, 14vw, 4.8rem);
+      width: clamp(3.2rem, 15vw, 5rem);
+      height: clamp(3.2rem, 15vw, 5rem);
       border-radius: 999px;
       background: #fff;
       color: #050505;
       border: 0.24rem solid #050505;
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.18), 0 0.55rem 1.5rem rgba(0, 0, 0, 0.55);
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2), 0 0.55rem 1.5rem rgba(0, 0, 0, 0.6);
       font-family: system-ui, sans-serif;
       font-size: clamp(0.72rem, 3vw, 1rem);
       font-weight: 1000;
@@ -228,6 +230,26 @@
     .confirm-button {
       background: #050505;
       color: #fff;
+    }
+
+    @media (display-mode: browser) {
+      body::before {
+        content: "For true fullscreen: open the browser menu and choose Add to Home screen, then launch from the icon.";
+        position: fixed;
+        left: 0.5rem;
+        right: 0.5rem;
+        top: max(0.5rem, env(safe-area-inset-top));
+        z-index: 60;
+        padding: 0.45rem 0.6rem;
+        border-radius: 0.7rem;
+        background: rgba(255, 255, 255, 0.88);
+        color: #050505;
+        font-family: system-ui, sans-serif;
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-align: center;
+        opacity: 0.9;
+      }
     }
 
     @media (orientation: landscape) {
